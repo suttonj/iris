@@ -43,28 +43,53 @@ task :fetch_news => :environment do
 
 	puts "Querying social networks for share counts"
 	
-	Link.all.each do |link|
-		#puts "title:"
-		#puts link.title
-		shares = ShareApi.twitter_shares(link.url)
-		shares = ShareApi.fb_shares(link.url)
-		#puts "SAVING SHARES: " + shares.to_s
-		link.shares = shares
-		link.save
-	end
+	# Link.all.each do |link|
+	# 	#puts "title:"
+	# 	shares = ShareApi.twitter_shares(link.url)
+	# 	shares = ShareApi.fb_shares(link.url)
+	# 	#temp fix for NYT paywall
+	# 	if link.url.include? "nytimes"
+	# 		link.shares = 0
+	# 	else
+	# 		link.shares = shares
+	# 	end
+	# 	link.save
+	# end
 
 	puts "************TOP 10 NEWS ITEMS************"
 	Link.find(:all, :limit => 10, :order => "shares DESC").each do |link|
-		puts link.title + " - " + link.shares.to_s
+		response =
+			HTTParty.get("http://clipped.me/algorithm/clippedapi.php?url=" + link.url)
+    			#:query => { "url" => link.url },
+    			#:headers => { "X-Mashape-Authorization" => "4fx9RR3HjiRPQy5FMFxhBSLdcspNk0hi"})
+		response = JSON.parse(response.body)
+		#puts link.title + " - " + link.shares.to_s
+		# puts response["title"]
+		# puts response["summary"]
+		puts "----------------"
+		link.summary = response["summary"]
+		#link.title = response["title"]
+		
 		#get title direct from news page
-		# begin
-		# 	doc = Nokogiri::HTML(HTTParty.get(link.url))
-		# 	title = doc.css("title").text.split('|')[0].strip
-		# 	puts title + " - " + link.shares.to_s
-		# rescue OpenURI::HTTPError => e
-		# 	puts "HTTP ERROR"
-		# #title = title.split('|')[0]
+
+		doc = Nokogiri::HTML(HTTParty.get(link.url))
+		title = doc.css("title").text.split('|')[0].strip
+		image = doc.css("meta[property='og:image']").first
+		if (image.nil?)
+			image = doc.css("meta[name='image']").first
+			if (image.nil?)
+				image = "news_icon.jpg"
+			else
+				image = image.attributes["content"]
+			end
+		else
+			image = image.attributes["content"]
+		end
+		# 	puts tag.value
 		# end
+		puts image
+
+		link.save
 	end
 	#ShareApi.reddit_top()
   # NewsHub.all.each do |hub|

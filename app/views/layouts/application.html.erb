@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="News">
 <head>
   <title>Iris</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "application", controller_name %>
   <%= csrf_meta_tags %>
+ 
 </head>
 <body>
 

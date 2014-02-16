@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(:version => 20140113023711) do
 
   create_table "links", :force => true do |t|
     t.string   "url"
-    t.string   "title"
+    t.text     "title"
     t.text     "summary"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false

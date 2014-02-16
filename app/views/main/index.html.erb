@@ -1,0 +1,29 @@
+<div class="container" ng-controller="NewsControl">
+	<h1 class='text-center'>Top 10 News Today</h1>
+	<accordion>
+	    <accordion-group ng-repeat="link in data.links">
+	    	<accordion-heading>
+	    		<img src="<%= image_path 'news_icon.jpg' %>"/>
+	    		{{link.title}}
+	    		<!-- <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i> -->
+	    	</accordion-heading>
+	      	{{link.summary}}
+	    </accordion-group>
+	</accordion>
+
+	<!-- <div id="news" class="panel-group">
+		<div class="panel panel-default" ng-repeat="link in data.links">
+		    <div class="panel-heading" data-parent="#news" data-toggle="collapse" data-target="#collapse{{ link.id }}">
+		    	<h4 class="panel-title">
+		        	<a href="#"  class="accordion-toggle">{{ link.title }}</a>
+		        </h4>
+		    </div>
+		    <div class="panel-collapse collapse in" id="collapse{{ link.id }}">
+		        <div class="panel-body">
+		            <p>{{ link.summary }}</p>
+		        </div>
+		    </div>
+		</div>    
+	</div> -->
+</div>
+

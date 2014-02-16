@@ -49,6 +49,8 @@ class ShareApi
       url = listing["data"]["url"]
       title = listing["data"]["title"]
       score = listing["data"]["score"]
+      puts title
+      puts url
       link = Link.create({ :url => url, :title => title })
       #link.shares = score
       #link.save

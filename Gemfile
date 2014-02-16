@@ -26,6 +26,9 @@ gem 'nokogiri'
 gem 'httparty'
 gem 'json'
 gem 'snoo'
+gem 'bootstrap-sass', '~> 2.3.1.0'
+gem 'angularjs-rails'
+gem 'angular-ui-bootstrap-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
