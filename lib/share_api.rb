@@ -43,7 +43,8 @@ class ShareApi
 
   def self.reddit_top(limit=100)
     reddit = Snoo::Client.new
-    reddit.log_in 'news_fetch', '$marcsmom22'
+    puts ENV['REDDIT_PASS']
+    reddit.log_in ENV['REDDIT_USER'], ENV['REDDIT_PASS']
     listings = reddit.get_listing({ :page => 'top' })
     listings["data"]["children"].each do |listing|
       url = listing["data"]["url"]

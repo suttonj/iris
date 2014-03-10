@@ -17,18 +17,21 @@ task :fetch_news => :environment do
 	news.css(".section-content .esc-lead-article-title").each do |item|
 		title = item.at_css(".titletext").text
 		url = item.at_css("a")['url']
+		#if url.include?("nytimes")
+		#	next
+		#end
   		#or, do other stuff here.
   		Link.create({ :url => url, :title => title })
 	end
 
-	doc = Nokogiri::XML(open("http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"))
-	doc.css("item").each do |item|
-		#puts item.css("title").inner_text
-		title = item.css("title").inner_text
-		url = item.css("link").inner_text
-  		#or, do other stuff here.
-  		Link.create({ :url => url, :title => title })
-	end
+	##doc = Nokogiri::XML(open("http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"))
+	#doc.css("item").each do |item|
+	#	#puts item.css("title").inner_text
+	#	title = item.css("title").inner_text
+	#	url = item.css("link").inner_text
+  	#	#or, do other stuff here.
+  	#	Link.create({ :url => url, :title => title })
+	#end
 
 	doc = Nokogiri::XML(open("http://feeds.huffingtonpost.com/huffingtonpost/raw_feed"))
 	doc.css("item").each do |item|
@@ -43,18 +46,18 @@ task :fetch_news => :environment do
 
 	puts "Querying social networks for share counts"
 	
-	# Link.all.each do |link|
-	# 	#puts "title:"
-	# 	shares = ShareApi.twitter_shares(link.url)
-	# 	shares = ShareApi.fb_shares(link.url)
-	# 	#temp fix for NYT paywall
-	# 	if link.url.include? "nytimes"
-	# 		link.shares = 0
-	# 	else
-	# 		link.shares = shares
-	# 	end
-	# 	link.save
-	# end
+	Link.all.each do |link|
+	 	#puts "title:"
+	 	shares = ShareApi.twitter_shares(link.url)
+	 	shares = ShareApi.fb_shares(link.url)
+	 	#temp fix for NYT paywall
+	 	if link.url.include? "nytimes"
+	 		link.shares = 0
+	 	else
+	 		link.shares = shares
+	 	end
+	 	link.save
+	 end
 
 	puts "************TOP 10 NEWS ITEMS************"
 	Link.find(:all, :limit => 10, :order => "shares DESC").each do |link|
@@ -67,6 +70,7 @@ task :fetch_news => :environment do
 		# puts response["title"]
 		# puts response["summary"]
 		puts "----------------"
+		puts response
 		link.summary = response["summary"]
 		#link.title = response["title"]
 		
@@ -87,7 +91,7 @@ task :fetch_news => :environment do
 		end
 		# 	puts tag.value
 		# end
-		puts image
+		#puts image
 
 		link.save
 	end
